@@ -109,13 +109,9 @@ def scheme_read(src):
         raise EOFError
     val = src.remove_front() # Get the first token
     if val == 'nil':
-        # BEGIN PROBLEM 1
-        "*** REPLACE THIS LINE ***"
-        # END PROBLEM 1
+        return nil
     elif val == '(':
-        # BEGIN PROBLEM 1
-        "*** REPLACE THIS LINE ***"
-        # END PROBLEM 1
+        return read_tail(src)
     elif val == "'":
         # BEGIN PROBLEM 7B
         "*** REPLACE THIS LINE ***"
@@ -139,17 +135,20 @@ def read_tail(src):
         if src.current() is None:
             raise SyntaxError('unexpected end of file')
         elif src.current() == ')':
-            # BEGIN PROBLEM 1
-            "*** REPLACE THIS LINE ***"
-            # END PROBLEM 1
+            src.remove_front()
+            return nil
         elif src.current() == '.':
-            # BEGIN PROBLEM 2
-            "*** REPLACE THIS LINE ***"
-            # END PROBLEM 2
+            src.remove_front()
+            val = scheme_read(src)
+            if src.current() != ')':
+                raise SyntaxError('you don screwed somethin up')
+            else:
+                src.remove_front()
+                return val
         else:
-            # BEGIN PROBLEM 1
-            "*** REPLACE THIS LINE ***"
-            # END PROBLEM 1
+            first = scheme_read(src)
+            rest = read_tail(src)
+            return Pair(first, rest)
     except EOFError:
         raise SyntaxError('unexpected end of file')
 
