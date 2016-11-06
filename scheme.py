@@ -30,9 +30,8 @@ def scheme_eval(expr, env, _=None): # Optional third argument is ignored
     if scheme_symbolp(first) and first in SPECIAL_FORMS:
         return SPECIAL_FORMS[first](rest, env)
     else:
-        # BEGIN PROBLEM 5
-        "*** REPLACE THIS LINE ***"
-        # END PROBLEM 5
+        check_procedure(scheme_eval(expr.first,env))
+        return scheme_apply(scheme_eval(expr.first,env), expr.second.map(lambda x: scheme_eval(x,env)),env)
 
 def self_evaluating(expr):
     """Return whether EXPR evaluates to itself."""
@@ -71,15 +70,14 @@ class Frame:
 
     def define(self, symbol, value):
         """Define Scheme SYMBOL to have VALUE."""
-        # BEGIN PROBLEM 3
-        "*** REPLACE THIS LINE ***"
-        # END PROBLEM 3
+        self.bindings[symbol] = value
 
     def lookup(self, symbol):
         """Return the value bound to SYMBOL. Errors if SYMBOL is not found."""
-        # BEGIN PROBLEM 3
-        "*** REPLACE THIS LINE ***"
-        # END PROBLEM 3
+        if symbol in self.bindings:
+            return self.bindings[symbol]
+        if self.parent:
+            return self.parent.lookup(symbol)
         raise SchemeError('unknown identifier: {0}'.format(symbol))
 
     def make_child_frame(self, formals, vals):
@@ -134,9 +132,12 @@ class PrimitiveProcedure(Procedure):
         while args is not nil:
             python_args.append(args.first)
             args = args.second
-        # BEGIN PROBLEM 4
-        "*** REPLACE THIS LINE ***"
-        # END PROBLEM 4
+        if self.use_env == True:
+            python_args.append(env)
+        try:
+            return self.fn(*python_args)
+        except TypeError:
+            raise SchemeError('wrong number of parameters passed')
 
 class UserDefinedProcedure(Procedure):
     """A procedure defined by an expression."""
