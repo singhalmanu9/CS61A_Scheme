@@ -30,8 +30,8 @@ def scheme_eval(expr, env, _=None): # Optional third argument is ignored
     if scheme_symbolp(first) and first in SPECIAL_FORMS:
         return SPECIAL_FORMS[first](rest, env)
     else:
-        check_procedure(scheme_eval(expr.first,env))
-        return scheme_apply(scheme_eval(expr.first,env), expr.second.map(lambda x: scheme_eval(x,env)),env)
+        check_procedure(scheme_eval(expr.first, env))
+        return scheme_apply(scheme_eval(expr.first, env), expr.second.map(lambda x: scheme_eval(x, env)), env)
 
 def self_evaluating(expr):
     """Return whether EXPR evaluates to itself."""
@@ -40,15 +40,20 @@ def self_evaluating(expr):
 def scheme_apply(procedure, args, env):
     """Apply Scheme PROCEDURE to argument values ARGS (a Scheme list) in
     environment ENV."""
+    print(env)
     check_procedure(procedure)
     return procedure.apply(args, env)
 
 def eval_all(expressions, env):
     """Evaluate a Scheme list of EXPRESSIONS & return the value of the last."""
-    # BEGIN PROBLEM 8
-    "*** REPLACE THIS LINE ***"
+    if expressions is nil:
+        return None
+
+    print(env)
+    while len(expressions) > 1:
+        scheme_eval(expressions.first, env)
+        expressions = expressions.second
     return scheme_eval(expressions.first, env)
-    # END PROBLEM 8
 
 ################
 # Environments #
@@ -146,6 +151,7 @@ class UserDefinedProcedure(Procedure):
         """Apply SELF to argument values ARGS in environment ENV. Applying a
         user-defined procedure evaluates all expressions in the body."""
         new_env = self.make_call_frame(args, env)
+        print(env, new_env)
         return eval_all(self.body, new_env)
 
 class LambdaProcedure(UserDefinedProcedure):
@@ -200,9 +206,9 @@ def do_define_form(expressions, env):
         return target
 
     elif isinstance(target, Pair) and scheme_symbolp(target.first):
-        # BEGIN PROBLEM 10
-        "*** REPLACE THIS LINE ***"
-        # END PROBLEM 10
+        func = LambdaProcedure(target.second, expressions.second, env)
+        env.define(target.first, func)
+        return target.first
     else:
         bad_target = target.first if isinstance(target, Pair) else target
         raise SchemeError('non-symbol: {0}'.format(bad_target))
@@ -222,9 +228,8 @@ def do_lambda_form(expressions, env):
     check_form(expressions, 2)
     formals = expressions.first
     check_formals(formals)
-    # BEGIN PROBLEM 9
-    "*** REPLACE THIS LINE ***"
-    # END PROBLEM 9
+    lam = LambdaProcedure(formals, expressions.second, env)
+    return lam
 
 def do_if_form(expressions, env):
     """Evaluate an if form."""
@@ -258,9 +263,10 @@ def do_cond_form(expressions, env):
         else:
             test = scheme_eval(clause.first, env)
         if scheme_truep(test):
-            # BEGIN PROBLEM 14
-            "*** REPLACE THIS LINE ***"
-            # END PROBLEM 14
+            ev = eval_all(clause.second, env)
+            if not ev:
+                return test
+            return ev
         expressions = expressions.second
 
 def do_let_form(expressions, env):
