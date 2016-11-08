@@ -196,9 +196,9 @@ def do_define_form(expressions, env):
     target = expressions.first
     if scheme_symbolp(target):
         check_form(expressions, 2, 2)
-        # BEGIN PROBLEM 6
-        "*** REPLACE THIS LINE ***"
-        # END PROBLEM 6
+        env.define(target, scheme_eval(expressions.second.first, env))
+        return target
+
     elif isinstance(target, Pair) and scheme_symbolp(target.first):
         # BEGIN PROBLEM 10
         "*** REPLACE THIS LINE ***"
@@ -210,9 +210,7 @@ def do_define_form(expressions, env):
 def do_quote_form(expressions, env):
     """Evaluate a quote form."""
     check_form(expressions, 1, 1)
-    # BEGIN PROBLEM 7
-    "*** REPLACE THIS LINE ***"
-    # END PROBLEM 7
+    return expressions.first
 
 def do_begin_form(expressions, env):
     """Evaluate begin form."""

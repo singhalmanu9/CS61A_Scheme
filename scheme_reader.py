@@ -113,9 +113,7 @@ def scheme_read(src):
     elif val == '(':
         return read_tail(src)
     elif val == "'":
-        # BEGIN PROBLEM 7B
-        "*** REPLACE THIS LINE ***"
-        # END PROBLEM 7B
+        return Pair('quote', Pair(scheme_read(src), nil))
     elif val not in DELIMITERS:
         return val
     else:
@@ -133,7 +131,7 @@ def read_tail(src):
     """
     try:
         if src.current() is None:
-            raise SyntaxError('unexpected end of file')
+            raise SyntaxError('unexpected end of file 1')
         elif src.current() == ')':
             src.remove_front()
             return nil
