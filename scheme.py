@@ -97,9 +97,14 @@ class Frame:
         <{a: 1, b: 2, c: 3} -> <Global Frame>>
         """
         child = Frame(self) # Create a new child with self as the parent
-        # BEGIN PROBLEM 11
-        "*** REPLACE THIS LINE ***"
-        # END PROBLEM 11
+        def assign_parameters(formals, vals):
+            if formals is nil and vals is nil:
+                return None
+            elif formals is nil or vals is nil:
+                raise SchemeError
+            child.bindings[formals.first] = vals.first
+            assign_parameters(formals.second, vals.second)
+        assign_parameters(formals, vals)
         return child
 
 ##############
@@ -168,9 +173,7 @@ class LambdaProcedure(UserDefinedProcedure):
     def make_call_frame(self, args, env):
         """Make a frame that binds the formal parameters to ARGS, a Scheme list
         of values, for a lexically-scoped call evaluated in environment ENV."""
-        # BEGIN PROBLEM 12
-        "*** REPLACE THIS LINE ***"
-        # END PROBLEM 12
+        return self.env.make_child_frame(self.formals,args)
 
     def __str__(self):
         return str(Pair('lambda', Pair(self.formals, self.body)))
@@ -241,15 +244,23 @@ def do_if_form(expressions, env):
 
 def do_and_form(expressions, env):
     """Evaluate a short-circuited and form."""
-    # BEGIN PROBLEM 13
-    "*** REPLACE THIS LINE ***"
-    # END PROBLEM 13
+    if expressions is nil:
+        return True
+    while expressions.second is not nil:
+        if scheme_falsep(scheme_eval(expressions.first,env)):
+            return False
+        expressions = expressions.second
+    return scheme_eval(expressions.first,env)
 
 def do_or_form(expressions, env):
     """Evaluate a short-circuited or form."""
-    # BEGIN PROBLEM 13
-    "*** REPLACE THIS LINE ***"
-    # END PROBLEM 13
+    if expressions is nil:
+        return False
+    while expressions is not nil:
+        if scheme_truep(scheme_eval(expressions.first,env)):
+            return scheme_eval(expressions.first,env)
+        expressions = expressions.second
+    return False
 
 def do_cond_form(expressions, env):
     """Evaluate a cond form."""
@@ -282,9 +293,15 @@ def make_let_frame(bindings, env):
     Scheme expression."""
     if not scheme_listp(bindings):
         raise SchemeError('bad bindings list in let form')
-    # BEGIN PROBLEM 15
-    "*** REPLACE THIS LINE ***"
-    # END PROBLEM 15
+    formals = nil
+    vals = nil
+    while bindings is not nil:
+        check_form(bindings.first, 2, 2)
+        formals = Pair(bindings.first.first, formals)
+        vals = Pair(scheme_eval(bindings.first.second.first,env), vals)
+        bindings = bindings.second
+    check_formals(formals)
+    return env.make_child_frame(formals, vals)
 
 SPECIAL_FORMS = {
     'and': do_and_form,
