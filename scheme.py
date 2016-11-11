@@ -40,7 +40,6 @@ def self_evaluating(expr):
 def scheme_apply(procedure, args, env):
     """Apply Scheme PROCEDURE to argument values ARGS (a Scheme list) in
     environment ENV."""
-    print(env)
     check_procedure(procedure)
     return procedure.apply(args, env)
 
@@ -48,8 +47,6 @@ def eval_all(expressions, env):
     """Evaluate a Scheme list of EXPRESSIONS & return the value of the last."""
     if expressions is nil:
         return None
-
-    print(env)
     while len(expressions) > 1:
         scheme_eval(expressions.first, env)
         expressions = expressions.second
@@ -156,7 +153,6 @@ class UserDefinedProcedure(Procedure):
         """Apply SELF to argument values ARGS in environment ENV. Applying a
         user-defined procedure evaluates all expressions in the body."""
         new_env = self.make_call_frame(args, env)
-        print(env, new_env)
         return eval_all(self.body, new_env)
 
 class LambdaProcedure(UserDefinedProcedure):
