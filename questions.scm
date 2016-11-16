@@ -42,11 +42,12 @@
 ;; Problem 18
 ;; List all ways to make change for TOTAL with DENOMS
 (define (list-change total denoms)
-  (cond
-    ((= total 0) (cons nil nil))
-    ((or (< total 0) (eq? denoms nil)) nil)
-    (else (append (cons-all (car denoms) (list-change (- total (car denoms)) denoms)) (list-change total (cdr denoms))))
-  )
+   (cond
+      ((= total 0) (cons nil nil))
+      ((or (< total 0) (eq? denoms nil)) nil)
+      (else (append (cons-all (car denoms) (list-change (- total (car denoms)) denoms)) (list-change total (cdr denoms))))
+
+   )
 )
   ; END PROBLEM 18
 
