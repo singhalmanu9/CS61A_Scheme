@@ -251,7 +251,7 @@ def do_and_form(expressions, env):
 def do_or_form(expressions, env):
     """Evaluate a short-circuited or form."""
     if expressions is nil:
-        return True
+        return False
     while expressions.second is not nil:
         if scheme_truep(scheme_optimized_eval(expressions.first,env)):
             return scheme_optimized_eval(expressions.first,env)
