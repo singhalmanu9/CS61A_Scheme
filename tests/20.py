@@ -114,7 +114,7 @@ test = {
           'locked': False
         }
       ],
-      'scored': True,
+      'scored': False,
       'setup': '',
       'teardown': '',
       'type': 'scheme'

@@ -13,18 +13,31 @@
   )
 
 (define (zip pairs)
-  (cond
-    ((eq? (car pairs) nil) nil)
-    (else (cons (map car pairs) (zip (map cdr pairs)))))
+  (if (eq? (car pairs) nil) nil
+    (cons (map car pairs) (zip (map cdr pairs)))
   )
+)
+
+(define (size l)
+  (if (null? l) 0
+    (+ 1 (size (cdr l)))
+  )
+)
+
+(define (range n)
+  (if (eq? n 0) (list 0)
+    (append (range (- n 1)) (list n))
+  )
+)
 
 ;; Problem 17
 ;; Returns a list of two-element lists
 (define (enumerate s)
-  ; BEGIN PROBLEM 17
-  'replace-this-line
+  (if (null? s) s
+      (zip (list (range (- (size s) 1)) s))
   )
-  ; END PROBLEM 17
+)
+
 
 ;; Problem 18
 ;; List all ways to make change for TOTAL with DENOMS
@@ -33,8 +46,8 @@
     ((= total 0) (cons nil nil))
     ((or (< total 0) (eq? denoms nil)) nil)
     (else (append (cons-all (car denoms) (list-change (- total (car denoms)) denoms)) (list-change total (cdr denoms))))
-    )
   )
+)
   ; END PROBLEM 18
 
 ;; Problem 19
