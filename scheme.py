@@ -45,12 +45,12 @@ def scheme_apply(procedure, args, env):
 
 def eval_all(expressions, env):
     """Evaluate a Scheme list of EXPRESSIONS & return the value of the last."""
-    if expressions is nil:
+    if expressions == nil:
         return None
-    while len(expressions) > 1:
-        scheme_eval(expressions.first, env)
+    while expressions.second != nil:
+        scheme_optimized_eval(expressions.first,env)
         expressions = expressions.second
-    return scheme_eval(expressions.first, env)
+    return scheme_optimized_eval(expressions.first, env, True)
 
 ################
 # Environments #
@@ -233,30 +233,30 @@ def do_lambda_form(expressions, env):
 def do_if_form(expressions, env):
     """Evaluate an if form."""
     check_form(expressions, 2, 3)
-    if scheme_truep(scheme_eval(expressions.first, env)):
-        return scheme_eval(expressions.second.first, env)
+    if scheme_truep(scheme_optimized_eval(expressions.first, env)):
+        return scheme_optimized_eval(expressions.second.first, env,True)
     elif len(expressions) == 3:
-        return scheme_eval(expressions.second.second.first, env)
+        return scheme_optimized_eval(expressions.second.second.first, env, True)
 
 def do_and_form(expressions, env):
     """Evaluate a short-circuited and form."""
     if expressions is nil:
         return True
     while expressions.second is not nil:
-        if scheme_falsep(scheme_eval(expressions.first,env)):
+        if scheme_falsep(scheme_optimized_eval(expressions.first,env)):
             return False
         expressions = expressions.second
-    return scheme_eval(expressions.first,env)
+    return scheme_optimized_eval(expressions.first,env,True)
 
 def do_or_form(expressions, env):
     """Evaluate a short-circuited or form."""
     if expressions is nil:
-        return False
-    while expressions is not nil:
-        if scheme_truep(scheme_eval(expressions.first,env)):
-            return scheme_eval(expressions.first,env)
+        return True
+    while expressions.second is not nil:
+        if scheme_truep(scheme_optimized_eval(expressions.first,env)):
+            return scheme_optimized_eval(expressions.first,env)
         expressions = expressions.second
-    return False
+    return scheme_optimized_eval(expressions.first,env,True)
 
 def do_cond_form(expressions, env):
     """Evaluate a cond form."""
@@ -478,15 +478,13 @@ def scheme_optimized_eval(expr, env, tail=False):
         if (scheme_symbolp(first) and first in SPECIAL_FORMS):
             result = SPECIAL_FORMS[first](rest, env)
         else:
-            # BEGIN Extra Credit
-            "*** REPLACE THIS LINE ***"
-            # END Extra Credit
+            result = scheme_apply(scheme_optimized_eval(expr.first,env), expr.second.map(lambda x: scheme_optimized_eval(x,env)),env)
     return result
 
 ################################################################
 # Uncomment the following line to apply tail call optimization #
 ################################################################
-# scheme_eval = scheme_optimized_eval
+scheme_eval = scheme_optimized_eval
 
 
 ################
