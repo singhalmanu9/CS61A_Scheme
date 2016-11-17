@@ -459,9 +459,7 @@ def scheme_optimized_eval(expr, env, tail=False):
         return expr
 
     if tail:
-        # BEGIN Extra Credit
-        "*** REPLACE THIS LINE ***"
-        # END Extra Credit
+        return Thunk(expr,env)
     else:
         result = Thunk(expr, env)
 
