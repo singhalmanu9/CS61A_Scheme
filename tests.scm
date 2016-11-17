@@ -6,9 +6,24 @@
 ;;;
 ;;; after the last test you wish to run.
 
-;;; **********************************
-;;; *** Add more of your own here! ***
-;;; **********************************
+1
+; expect 1
+
+(define s 10)
+; expect s
+s
+; expect 10
+
+(define (double num) (* num 2))
+; expect double
+
+(double 4)
+; expect 8
+
+(double (* 4 3))
+; expect 24
+
+(exit)
 
 ;;; These are examples from several sections of "The Structure
 ;;; and Interpretation of Computer Programs" by Abelson and Sussman.

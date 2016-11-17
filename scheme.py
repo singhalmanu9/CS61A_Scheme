@@ -270,10 +270,6 @@ def do_cond_form(expressions, env):
         else:
             test = scheme_eval(clause.first, env)
         if scheme_truep(test):
-            # ev = eval_all(clause.second, env)
-            # if not ev:
-            #     return test
-            # return ev
             if clause.second is nil:
                 return test
             return eval_all(clause.second, env)
