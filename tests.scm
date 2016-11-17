@@ -30,6 +30,127 @@ s
 
 ;;; License: Creative Commons share alike with attribution
 
+;;;Problem 5 Tests
+
+(+ 0 7)
+; expect 7
+
+(even? 5)
+;expect False
+
+(even? 6)
+;expect True
+
+(odd? 4)
+;expect False
+
+(zero? 0)
+;expect True
+
+(zero? 1)
+;expect False
+
+(= 5 7)
+;expect False
+
+(= 5 5)
+;expect True
+
+(> 5 7)
+;expect False
+
+(< 5 7)
+;expect True
+
+(abs -5)
+;expect 5
+
+(modulo 10 5)
+;expect 0
+
+(modulo 10 7)
+;expect 3
+
+;;;Problem 6 Tests
+
+(define x 15)
+(define y 10)
+(+ x y)
+;expect 25
+
+(define x 15)
+(+ x z)
+;expect Error
+
+(define x 10)
+(define y x)
+(eval y)
+;expect 10
+
+;;;Problem 7 Tests
+
+'high
+;expect high
+
+(quote high)
+;expect high
+
+'(1 . (2))
+;expect (1 2)
+
+'car(5 6)
+;expect Error
+
+(quote (1 . (2)))
+;expect (1 2)
+
+;;;11 - 12 Tests
+
+(define (square x) (* x x)))
+(square 5)
+;expect 25
+
+(define (make_square x f) (f x))
+(make_square 5 (lambda (x) (* x x)))
+;expect 25
+
+(define (make_adder x) (define (adder y) (+ y x)) adder)
+((make_adder 3) 2)
+;expect 5
+
+;;;13 Tests
+
+(and 5 4)
+;expect 4
+
+(and False 3)
+;expect False
+
+(and 0 0)
+;expect 0
+
+(and (and 0 False) 3)
+;expect False
+
+(and (or 0 False) 3)
+;expect 3
+
+(or (or 0 False) False)
+;expect 0
+
+;;;14 Tests
+
+(cond ((= 5 5) 5)
+      (else 7))
+;expect 5
+
+
+(cond ((= 5 5) 
+    (cond ((> 5 6) 27)
+          (else False))
+  ))
+;expect False
+
 ;;; 1.1.1
 
 10
